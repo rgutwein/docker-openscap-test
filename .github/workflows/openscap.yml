@@ -1,0 +1,28 @@
+name: OpenSCAP Compliance Check
+
+on: [push]
+
+jobs:
+  compliance-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build . -t openscap-check
+
+    - name: Run OpenSCAP compliance check
+      run: docker run --name openscap-container openscap-check
+      
+    - name: Copy results from container
+      run: |
+        docker cp openscap-container:/results/results.xml ./results/
+        docker cp openscap-container:/results/report.html ./results/
+        
+    - name: Upload Results as Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: openscap-results
+        path: results/
