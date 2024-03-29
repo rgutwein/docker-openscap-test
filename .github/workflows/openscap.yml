@@ -1,3 +1,11 @@
+name: OpenSCAP Compliance Check
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
 jobs:
   compliance-check:
     runs-on: ubuntu-latest
@@ -26,4 +34,5 @@ jobs:
       with:
         name: openscap-results
         path: results/
+
 
