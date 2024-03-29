@@ -5,9 +5,11 @@ FROM centos:7
 RUN yum -y update && \
     yum -y install openscap-scanner scap-security-guide
 
+# Create a directory for the results
+RUN mkdir -p /results
+
 # Set the working directory
 WORKDIR /usr/share/xml/scap/ssg/content
 
 # This command will be overridden by whatever command is run by the docker container at startup.
-# Here it's just an example to show how to run a compliance check.
-CMD ["oscap", "xccdf", "eval", "--profile", "xccdf_org.ssgproject.content_profile_standard", "--results", "/results/results.xml", "--report", "/results/report.html", "/usr/share/xml/scap/ssg/content/ssg-centos7-ds.xml"]
+CMD ["oscap", "xccdf", "eval", "--profile", "xccdf_org.ssgproject.content_profile_standard", "--results", "/results/results.xml", "--report", "/results/report.html", "ssg-centos7-ds.xml"]
