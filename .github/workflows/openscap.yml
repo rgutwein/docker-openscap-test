@@ -13,9 +13,12 @@ jobs:
       run: docker build . -t openscap-check
 
     - name: Run OpenSCAP compliance check
-      run: docker run --name openscap-container -v ${{ github.workspace }}/results:/results openscap-check
+      run: |
+        docker run --name openscap-container \
+        -v ${{ github.workspace }}/results:/results \
+        openscap-check
 
-    - name: List results
+    - name: List results for debugging
       run: ls -lah results/
 
     - name: Upload Results as Artifact
@@ -23,3 +26,4 @@ jobs:
       with:
         name: openscap-results
         path: results/
+
