@@ -1,7 +1,3 @@
-name: OpenSCAP Compliance Check
-
-on: [push]
-
 jobs:
   compliance-check:
     runs-on: ubuntu-latest
@@ -10,17 +6,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Create results directory
+      run: mkdir -p results
+
     - name: Build Docker image
       run: docker build . -t openscap-check
 
     - name: Run OpenSCAP compliance check
-      run: docker run --name openscap-container openscap-check
-      
-    - name: Copy results from container
-      run: |
-        docker cp openscap-container:/results/results.xml ./results/
-        docker cp openscap-container:/results/report.html ./results/
-        
+      run: docker run --name openscap-container -v ${{ github.workspace }}/results:/results openscap-check
+
+    - name: List results
+      run: ls -lah results/
+
     - name: Upload Results as Artifact
       uses: actions/upload-artifact@v2
       with:
